@@ -15,7 +15,7 @@ const uniqueMessage = (error) => {
   } catch (ex) {
     output = 'Unique field already exists'
   }
-
+  console.log(output)
   return output
 }
 
@@ -26,6 +26,7 @@ exports.errorHandler = (error) => {
   let message = ''
 
   if (error.code) {
+    console.log('or maybe here')
     switch (error.code) {
       case 11000:
       case 11001:
@@ -36,6 +37,7 @@ exports.errorHandler = (error) => {
     }
   } else {
     for (let errorName in error.errorors) {
+      console.log('iam here')
       if (error.errorors[errorName].message)
         message = error.errorors[errorName].message
     }

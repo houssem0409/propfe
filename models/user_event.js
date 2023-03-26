@@ -6,10 +6,7 @@ const user_eventSchema = new mongoose.Schema(
       type: ObjectId,
       required: true,
     },
-    Creator: {
-      type: ObjectId,
-      required: true,
-    },
+  
     participant: {
       type: ObjectId,
     },

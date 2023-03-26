@@ -18,6 +18,8 @@ const categoryRoutes = require('./routes/category')
 const startup_photoRoutes = require('./routes/startup_photo')
 const eventRoutes = require('./routes/event')
 const event_photoRoutes = require('./routes/event_photo')
+const ratingRoutes = require('./routes/rating')
+const user_eventRoutes = require('./routes/user_event')
 
 //app
 const app = express()
@@ -58,6 +60,8 @@ app.use('/api', categoryRoutes)
 app.use('/api', startup_photoRoutes)
 app.use('/api', eventRoutes)
 app.use('/api', event_photoRoutes)
+app.use('/api', ratingRoutes)
+app.use('/api', user_eventRoutes)
 
 const port = process.env.PORT || 8000
 

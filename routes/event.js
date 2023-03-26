@@ -3,12 +3,14 @@ const router = express.Router()
 const passport = require('passport')
 
 const {
+  MyEvents,
   create,
   eventById,
   read,
   remove,
   update,
   list,
+  listLimit,
   listRelated,
   listCategories,
   listBySearch,
@@ -41,15 +43,22 @@ router.post(
 
   create
 ) /** done */
-
+router.get('/events/:userId', MyEvents)
 router.post('/events/search', listSearch)
 router.get('/events/related/:productId', listRelated)
+router.get(
+  '/events/limit/:limit',
+
+  listLimit
+) /**done */
 router.get(
   '/events',
 
   list
 ) /**done */
 router.get('/events/categories', listCategories) /** done */
+
+router.post('/events/by/search', listBySearch)
 
 router.post('/events/by/search', listBySearch)
 

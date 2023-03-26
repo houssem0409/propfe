@@ -53,6 +53,28 @@ exports.update = (req, res) => {
     }
   )
 }
+exports.upgradeToManage = (req, res) => {
+  let user = {
+    startup: req.body.startup,
+    role: req.body.role,
+  }
+
+  User.findOneAndUpdate(
+    { _id: req.profile._id },
+    { $set: user },
+    { new: true },
+    (err, user) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'You are not authoraized to perform this action !',
+        })
+      }
+      //user.hashed_password = undefined
+      user.salt = undefined
+      res.json(user)
+    }
+  )
+}
 exports.add = (req, res) => {
   req.body.password = hashSync(req.body.password, 10)
   let user = new User(req.body)
@@ -127,4 +149,79 @@ exports.purchaseHistory = (req, res) => {
       }
       res.json(orders)
     })
+}
+
+exports.listSearch = (req, res) => {
+  // create query object to hold search value and category value
+  console.log('i am here ')
+  const query = {}
+
+  if (req.query.search) {
+    query.username = { $regex: req.query.search, $options: 'i' }
+    // assigne category value to query.category
+    console.log(query.username)
+    User.find(query, (err, users) => {
+      if (err) {
+        return res.status(400).json({
+          error: errorHandler(err),
+        })
+      }
+      res.json(users)
+    })
+  }
+}
+exports.listMembers = (req, res) => {
+  const query = { startup: req.params.startupId, role: 'member' }
+  User.find(query, (err, users) => {
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler(err),
+      })
+    }
+    res.json(users)
+  })
+}
+exports.removeMember = (req, res) => {
+  let user = {
+    startup: null,
+    role: 'user',
+  }
+
+  User.findOneAndUpdate(
+    { _id: req.profile._id },
+    { $set: user },
+    { new: true },
+    (err, user) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'You are not authoraized to perform this action !',
+        })
+      }
+      //user.hashed_password = undefined
+      user.salt = undefined
+      res.json(user)
+    }
+  )
+}
+
+exports.listSearchToAddMember = (req, res) => {
+  // create query object to hold search value and category value
+  let limit = req.body.limit ? parseInt(req.body.limit) : 25
+  const query = {}
+
+  if (req.query.search) {
+    query.username = { $regex: req.query.search, $options: 'i' }
+    // assigne category value to query.categoryI
+
+    User.find(query)
+      .limit(limit)
+      .exec((err, users) => {
+        if (err) {
+          return res.status(400).json({
+            error: errorHandler(err),
+          })
+        }
+        res.json(users)
+      })
+  }
 }

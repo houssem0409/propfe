@@ -16,7 +16,6 @@ exports.eventById = (req, res, next, id) => {
   })
 }
 exports.read = (req, res) => {
-  req.event.photo = undefined
   return res.json(req.event)
 }
 
@@ -30,8 +29,26 @@ exports.create = (req, res) => {
         error: 'Image could not be uploaded',
       })
     }
-    const { title, description, country, address, creator } = fields
-    if (!title || !description || !country || !address || !creator) {
+    const {
+      title,
+      description,
+      country,
+      city,
+      address,
+      creator,
+      start_date,
+      end_date,
+    } = fields
+    if (
+      !title ||
+      !description ||
+      !country ||
+      !address ||
+      !creator ||
+      !city ||
+      !start_date ||
+      !end_date
+    ) {
       return res.status(400).json({
         error: 'All fields are required !',
       })
@@ -120,8 +137,31 @@ exports.update = (req, res) => {
 exports.list = (req, res) => {
   let order = req.query.order ? req.query.order : 'asc'
   let sortBy = req.query.sortBy ? req.query.sortBy : '_id'
-  let limit = req.query.limit ? parseInt(req.query.limit) : 6
+  let limit = req.params.limit ? parseInt(req.params.limit) : 10
 
+  console.log(limit)
+  console.log('this')
+  Event.find()
+    .select('-photo')
+    .sort([[sortBy, order]])
+    .limit(limit)
+    .exec((err, events) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Event Not Found',
+        })
+      }
+      res.json(events)
+    })
+}
+
+exports.listLimit = (req, res) => {
+  let order = req.query.order ? req.query.order : 'asc'
+  let sortBy = req.query.sortBy ? req.query.sortBy : '_id'
+  let limit = req.params.limit ? parseInt(req.params.limit) : 10
+
+  console.log(limit)
+  console.log('this')
   Event.find()
     .select('-photo')
     .sort([[sortBy, order]])
@@ -247,4 +287,58 @@ exports.listSearch = (req, res) => {
       res.json(events)
     }).select('-photo')
   }
+}
+exports.MyEvents = (req, res) => {
+  let order = req.query.order ? req.query.order : 'asc'
+  let sortBy = req.query.sortBy ? req.query.sortBy : '_id'
+  let limit = req.query.limit ? parseInt(req.query.limit) : 9
+
+  const query = { creator: req.params.userId }
+  Event.find(query)
+    .select('-photo')
+    .sort([[sortBy, order]])
+    .limit(limit)
+    .exec((err, events) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Events Not Found',
+        })
+      }
+      res.json(events)
+    })
+}
+
+exports.listBySearch = (req, res) => {
+  let order = req.body.order ? req.body.order : 'desc'
+  let sortBy = req.body.sortBy ? req.body.sortBy : '_id'
+  let limit = req.body.limit ? parseInt(req.body.limit) : 100
+  let skip = parseInt(req.body.skip)
+  let findArgs = {}
+
+  console.log(order, sortBy, limit, skip, req.body.filters)
+  console.log('findArgs', findArgs)
+
+  for (let key in req.body.filters) {
+    console.log('the key is ' + key)
+    if (req.body.filters[key].length > 0) {
+      findArgs[key] = req.body.filters[key]
+    }
+  }
+
+  Event.find(findArgs)
+    .select('-photo')
+    .sort([[sortBy, order]])
+    .skip(skip)
+    .limit(limit)
+    .exec((err, data) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Event not found',
+        })
+      }
+      res.json({
+        size: data.length,
+        data,
+      })
+    })
 }

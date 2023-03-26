@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 require('../helpers/passport')
+const { userSignupValidator } = require('../validator/index')
 
 const {
   signup,
@@ -13,7 +14,7 @@ const {
 } = require('../controllers/auth')
 
 router.post('/refresh', refresh)
-router.post('/signup', signup)
+router.post('/signup', userSignupValidator, signup)
 router.post('/signin', signin)
 router.get('/signout', signout)
 router.get(

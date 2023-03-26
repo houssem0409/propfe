@@ -16,6 +16,9 @@ const eventSchema = new mongoose.Schema(
     country: {
       type: String,
     },
+    city: {
+      type: String,
+    },
     address: {
       type: String,
       default: 0,
@@ -27,6 +30,12 @@ const eventSchema = new mongoose.Schema(
     creator: {
       type: ObjectId,
       default: null,
+    },
+    start_date: {
+      type: Date,
+    },
+    end_date: {
+      type: Date,
     },
   },
   { timestamps: true }

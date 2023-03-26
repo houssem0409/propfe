@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
       required: true,
       maxlength: 32,
+      unique: 32,
     },
     email: {
       type: String,
@@ -20,6 +21,15 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+    },
+    address: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
+    city: {
+      type: String,
     },
     about: {
       type: String,
@@ -38,6 +48,10 @@ const userSchema = new mongoose.Schema(
     history: {
       type: Array,
       default: [],
+    },
+    verified: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

@@ -5,34 +5,55 @@ const startupSchema = new mongoose.Schema(
     name: {
       type: String,
       trim: true,
-      required: true,
-      maxlength: 32,
+      unique: true,
     },
     description: {
       type: String,
-      required: true,
       maxlength: 2000,
     },
     email: {
       type: String,
-      trim: true,
-      required: true,
-      maxlength: 32,
     },
+
     category: {
       type: ObjectId,
       ref: 'Category',
+      default: null,
     },
     country: {
       type: String,
     },
+    city: {
+      type: String,
+    },
     address: {
       type: String,
-      default: 0,
+      default: null,
     },
     photo: {
       data: Buffer,
       contentType: String,
+    },
+    logo: {
+      type: String,
+    },
+    year_founded: {
+      type: Number,
+    },
+    employee_range: {
+      type: String,
+    },
+    total_fundings: {
+      type: Number,
+      default: null,
+    },
+    lat: {
+      type: String,
+      default: 10,
+    },
+    lng: {
+      type: String,
+      default: 10,
     },
   },
   { timestamps: true }

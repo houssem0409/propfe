@@ -13,7 +13,12 @@ const {
   listCategories,
   listBySearch,
   photo,
+  listLimit,
   listSearch,
+  listSearchToManage,
+  FirstCrawl,
+  SecondCrawl,
+  updateLocation,
 } = require('../controllers/startup')
 const {
   requireSignin,
@@ -36,6 +41,7 @@ router.put(
 
   update
 ) /**done */
+router.put('/startup/location/:startupId', updateLocation)
 router.post(
   '/startup/create',
 
@@ -43,7 +49,13 @@ router.post(
 ) /** done */
 
 router.post('/startups/search', listSearch) /**done */
-router.get('/startups/related/:productId', listRelated)
+router.post('/startups/manage/search', listSearchToManage)
+router.get('/startups/related/:startupId', listRelated)
+router.get(
+  '/startups/:limit',
+
+  listLimit
+) /**done */
 router.get(
   '/startups',
 
@@ -55,6 +67,8 @@ router.post('/startups/by/search', listBySearch)
 
 router.param('userId', userById) /**done */
 router.param('startupId', startupById) /**done */
+router.post('/firstcrawl', FirstCrawl)
+router.post('/secondcrawl', SecondCrawl)
 
 router.get('/startup/photo/:startupId', photo) /**done */
 
